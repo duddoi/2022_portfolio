@@ -87,7 +87,11 @@ span.blue-dot{background-color: #50bdf2; left: 157px;}
   position: relative;
   padding: 60px 0;
 }
-.section--text.introduce{font-size: 3vw; color: #333333; bottom: auto; top: 200px;}
+.section--text.introduce{font-size: 4vw; color: #333333; bottom: auto; top: 250px; padding-left: 0;}
+.section--text.introduce>div{position: relative; z-index: 1;}
+.section--text.introduce .highlight{background: #333333; padding: 1.2vmax 5vmax; color:#16ffe1; position: relative; margin-top: 1vh; z-index: 0;}
+.section--text.introduce .highlight::before{content: ''; position: absolute; width: 5vmax; height: 5vmax; border-radius: 5vmax; left: -2.5vmax; top: -3vmax; border: 8px solid #ffffff;; background: #82d6ff;}
+.section--text.introduce .highlight::after{content: ''; position: absolute; width: 5vmax; height: 5vmax; border-radius: 5vmax; right: -2.5vmax; bottom: -3vmax; border: 8px solid #ffffff;; background: #ff36d2;}
 .section--image {
   display: block;
   position: relative;
@@ -148,4 +152,15 @@ span.blue-dot{background-color: #50bdf2; left: 157px;}
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
+}
+
+
+@media screen and (min-width : 1400px) {
+  .section--text.introduce{font-size: 50px;}
+}
+@media screen and (max-width : 800px) {
+  .section--text.introduce{font-size: 34px;}
+}
+@media screen and (max-width : 630px) {
+  .years{top: auto; bottom: 0;}
 }
