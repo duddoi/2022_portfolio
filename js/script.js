@@ -45,17 +45,31 @@ function preloadImage(img) {
   if (!src) { return; }
   img.src = src;
 }
-function moveCircle(e) {
-  $('.pointer-circle').animate({
-    left: e.offsetX,
-    top: e.offsetY
-  },10,'linear')
-}
-$(document).on('mousemove', moveCircle);
-
-$(document).ready(function() {
-  moveCircle;
+$("html").mousemove(function(e){
+  //console.log(e.target);
+  $(".pointer-circle").animate({
+      left:e.pageX,
+      top:e.pageY
+  },10,"linear");
+  if($(e.target).hasClass("img")||$(e.target).hasClass("pointer-circle")) { 
+    $(".pointer-circle").addClass("view");
+  }else{
+    $(".pointer-circle").removeClass("view");
+  }
 })
+// $(".img-wrap").mousemove(function(){
+//   $(".pointer-circle").addClass("view");
+// });
+// $("div").not(".img-wrap").mousemove(function(){
+//   $(".pointer-circle").removeClass("view");
+// });
+
+// $(".img-wrap").mousemove(function(){
+//   $(".pointer-circle").addClass("view");
+// })
+// $("div").not(".img-wrap").mousemove(function(){
+//   $(".pointer-circle").removeClass("view");
+// })
 // function onIntersection(entries) {
 //   // Loop through the entries
 //   for (var i = 0, len = entries.length; i < len; i++) {

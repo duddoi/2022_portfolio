@@ -156,6 +156,7 @@ hr.short{width: 50px; position: inherit; display: block; margin: 20px 0;}
   max-width: 100%;
   max-height: 100vh;
   margin: 0 0 0 auto;
+  cursor: pointer;
 }
 
 .section--text {
@@ -187,19 +188,38 @@ hr.short{width: 50px; position: inherit; display: block; margin: 20px 0;}
 .img-wrap{display: inline-block; position: relative;}
 .pointer-circle {
   position: absolute;
-  width: 80px;
-  height: 80px;
+  width: 10px;
+  height: 10px;
   top: 50%;
   left: 50%;
-  margin: -40px 0 0 -40px;
-  background: #CB4B16;
+  margin: -10px 0 0 -10px;
+  background: #f36177;
   border-radius: 80%;
   backface-visibility: hidden;
   z-index: 999;
-  display: block;
-  opacity: 0;
+  display: none;
+  /* width: 60px;
+  height: 60px;
+  background: var(--color-bg);
+  opacity: .6;
+  cursor: pointer; */
 }
-/* .img-wrap:hover .pointer-circle{opacity: 1;} */
+.pointer-circle.view{
+  width: 60px;
+  height: 60px;
+  background: var(--color-bg);
+  margin: -30px 0 0 -30px;
+  opacity: .6;
+  cursor: pointer;
+}
+.pointer-circle.view::before{
+  content: 'view case';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+}
+body:hover .pointer-circle{display: block;}
 
 @-webkit-keyframes fadeInUp {
   0% {
