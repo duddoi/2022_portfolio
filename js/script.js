@@ -9,7 +9,7 @@ let config = {
 };
 
 let observer = new IntersectionObserver((entries) => {
-  console.log(entries);
+  // console.log(entries);
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       intersectionHandler(entry);
@@ -45,9 +45,17 @@ function preloadImage(img) {
   if (!src) { return; }
   img.src = src;
 }
+function moveCircle(e) {
+  $('.pointer-circle').animate({
+    left: e.offsetX,
+    top: e.offsetY
+  },10,'linear')
+}
+$(document).on('mousemove', moveCircle);
 
-
-
+$(document).ready(function() {
+  moveCircle;
+})
 // function onIntersection(entries) {
 //   // Loop through the entries
 //   for (var i = 0, len = entries.length; i < len; i++) {
