@@ -539,6 +539,12 @@ span.purple-dot {
   .section--image img {
     max-height: 100vh;
   }
+  .section .bottom{
+    bottom: 40vh;
+  }
+  .bottom .name{
+    margin-top: 20vh;
+  }
 }
 @media screen and (max-width: 630px) {
   .years {
