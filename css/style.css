@@ -545,6 +545,13 @@ span.purple-dot {
   .bottom .name{
     margin-top: 20vh;
   }
+  .bg-circle-three{
+    left: -24%;
+    top: 10%;
+  }
+  .bg-circle-four{
+    bottom: -5%;
+  }
 }
 @media screen and (max-width: 630px) {
   .years {
