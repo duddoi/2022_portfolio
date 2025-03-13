@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Document</title>
+</head>
+
+<style>
+#f_t {
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+}
+#f_m {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+    transform: translateY(-50%);
+}
+#f_b {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+}
+
+html,
+body,
+div {
+    box-sizing: border-box;
+}
+.body_text {
+    padding: 30px;
+}
+
+body {
+    background: gray;
+}
+#wrap {
+    background: lightgoldenrodyellow;
+}
+
+#fixed_wrap {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+}
+#fixed_wrap.on {
+    display: block;
+}
+#fixed_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+}
+#fixed_content {
+    height: 90%;
+    padding: 10px 10px 100px;
+    overflow-y: auto;
+    border-radius: 30px 30px 0 0;
+    background: lightgreen;
+}
+#fixed_button {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
+    background: lightblue;
+}
+
+.keypadViewHtml #wrap {
+    background: coral;
+}
+.keypadViewHtml.ios,
+.keypadViewHtml.ios body,
+.keypadViewHtml.ios #wrap {
+    overflow: hidden;
+    height: 100%;
+}
+.keypadViewHtml.ios #fixed_content {
+    height: calc((var(--mhWVh, 1vh) * 90));
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+if (
+    navigator.userAgent.match(/iPhone/i) ||
+    navigator.userAgent.match(/iPad/i) ||
+    navigator.userAgent.match(/iPod/i)
+) {
+    $("html").addClass("ios");
+}
+
+var originalHeight = window.visualViewport.height; //키패드 없을 때 visualViewport 높이
+window.visualViewport.onresize = function () {
+    if (typeof filterKeypadHandler == "function") filterKeypadHandler();
+
+    var wvh = window.visualViewport.height * 0.01;
+    document.documentElement.style.setProperty("--mhWVh", wvh + "px");
+};
+
+var filterKeypadOrgScroll; //overflow hidden 처리 전 스크롤 위치 저장
+function filterKeypadHandler() {
+    if ($("html").hasClass("ios")) {
+    console.log($(window).on("scroll"))
+    if (originalHeight > window.visualViewport.height) {
+        //키패드 떴을 때
+        if ($("#fixed_wrap input:focus").length > 0) {
+        //바닥 화면에서 아래로 당길 때 대응
+        filterKeypadOrgScroll = $(window).scrollTop();
+        $("html").addClass("keypadViewHtml");
+        filterKeypadMoveBottom();
+        $(window).on(
+            "scroll.filterKeypadScroll", //네임스페이스, 내가 적용한 이벤트에만 동작/해제 필요할 경우
+            filterKeypadScrollHandler
+        );
+    }
+} else {
+    if ($("html").hasClass("keypadViewHtml")) {
+        $("html").removeClass("keypadViewHtml");
+        $(window).off("scroll.filterKeypadScroll");
+        window.scrollTo(0, filterKeypadOrgScroll);
+    }
+}
+    }
+}
+filterKeypadHandler();
+
+//키패드 팝업 화면 아래에 붙이기 // https://velog.io/@th_velog visualViewport 포스트 참고
+function filterKeypadMoveBottom() {
+    window.scrollTo(
+    0,
+    document.body.offsetHeight - visualViewport.height - 1
+    );
+}
+
+function filterKeypadScrollHandler() {
+    //가상 영역이 보이는 지 체크 : 스크롤 + 보여지는 화면 높이 > 본문 높이
+    if (
+    window.scrollY + visualViewport.height >
+    document.body.offsetHeight - 2
+    ) {
+    filterKeypadMoveBottom();
+    }
+}
+</script>
+
+<body>
+<div id="wrap">
+    <div class="body_text">
+    <p><a href="tel:2222222222">2222222222</a></p>
+    <p><a href="tel:1234567890">1234567890</a></p>
+    <p>가나다라마바사</p>
+    <p>!@#$%^&amp;*()</p>
+    <p>----------</p>
+    <div>
+        <button onclick="$('#fixed_wrap').addClass('on');">OPEN POP</button>
+    </div>
+    <p>==========</p>
+    <p><a href="tel:1234567890">1234567890</a></p>
+    <p>가나다라마바사</p>
+    <p>!@#$%^&amp;*()</p>
+    <p>----------</p>
+    <p>==========</p>
+    <p><a href="tel:1234567890">1234567890</a></p>
+    <p>가나다라마바사</p>
+    <p>!@#$%^&amp;*()</p>
+    <p>----------</p>
+    <p>==========</p>
+    <p><a href="tel:1234567890">1234567890</a></p>
+    <p>가나다라마바사</p>
+    <p>!@#$%^&amp;*()</p>
+    <p>----------</p>
+    <p>==========</p>
+    <p><a href="tel:1234567890">1234567890</a></p>
+    <p>가나다라마바사</p>
+    <p>!@#$%^&amp;*()</p>
+    <p>----------</p>
+    <p>==========</p>
+    <p><a href="tel:1234567890">1234567890</a></p>
+    <p>가나다라마바사</p>
+    <p>!@#$%^&amp;*()</p>
+    <p>----------</p>
+    <p>==========</p>
+    <p><a href="tel:1234567890">1234567890</a></p>
+    <p>가나다라마바사</p>
+    <p>!@#$%^&amp;*()</p>
+    <p>----------</p>
+    </div>
+    <div id="fixed_wrap">
+    <div id="fixed_container">
+        <div id="fixed_content">
+        <div class="fixed_text">
+            <p><a href="tel:2222222222">2222222222</a></p>
+            <div><input type="text" id="input1" /></div>
+            <p><a href="tel:0987654321">0987654321</a></p>
+            <p>ABCDEFG</p>
+            <p>[{{&lt;::&gt;}}]</p>
+            <p>++++++++++</p>
+            <p>##########</p>
+            <p><a href="tel:0987654321">0987654321</a></p>
+            <p>ABCDEFG</p>
+            <p>[{{&lt;::&gt;}}]</p>
+            <p><a href="tel:2222222222">2222222222</a></p>
+            <div><input type="text" id="input2" /></div>
+            <p><a href="tel:0987654321">0987654321</a></p>
+            <p>ABCDEFG</p>
+            <p>[{{&lt;::&gt;}}]</p>
+            <p>++++++++++</p>
+            <p>##########</p>
+            <p><a href="tel:0987654321">0987654321</a></p>
+            <p>ABCDEFG</p>
+            <p>[{{&lt;::&gt;}}]</p>
+            <p><a href="tel:2222222222">2222222222</a></p>
+            <div><input type="text" id="input3" /></div>
+            <p><a href="tel:0987654321">0987654321</a></p>
+            <p>ABCDEFG</p>
+            <p>[{{&lt;::&gt;}}]</p>
+            <p>++++++++++</p>
+            <p>##########</p>
+            <p><a href="tel:0987654321">0987654321</a></p>
+            <p>ABCDEFG</p>
+            <p>[{{&lt;::&gt;}}]</p>
+        </div>
+        <div>
+            <button id="fixed_button" onclick="$('#fixed_wrap').removeClass('on');">CLOSE POP</button>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<div id="f_t">fixed_top</div>
+<div id="f_m">fixed_middle</div>
+<div id="f_b">fixed_bottom</div>
+</body>
+
+<!--기본문법-->
+<script>
+// console.log(10%3.2);
+const makePerson = ({familyName, givenName, address}) => {
+    return {
+    name: `${givenName} ${familyName}`,
+    address,
+    };
+};
+
+const person = makePerson({
+familyName: 'Lee',
+givenName: 'Youngae',
+    address: 'Seoul',
+    Sex: 'Femal'
+});
+
+console.log(person);
+
+const test = (a)=>{
+    return a+1;
+};
+
+console.log(test`3`);
+console.log(test(4));
+
+const names = ['Lee', 'Kim', 'Park', 'Park'];
+// const newNames = [...new Set(names)];
+const newNames = new Set(names);
+console.log(newNames);
+
+const namess = new Object();
+names.age = 12;
+// console.log([...{'Lee', 'Kim', 'Park'}]);
+
+const time = 'hour';
+// time = 'miniute';
+console.log(time);
+
+const arr1 = new Array(6);
+const arr2 = [...new Array(6)].map((a,i)=>i*i);
+
+console.log(arr1)
+console.log(arr2)
+
+
+const splice =[1,2,3,4,5,6];
+splice.splice(1,2,['00','44']);
+console.log(splice);
+
+let nums = [2,4,5,6];
+nums=nums.filter(num=>num%2==0);
+console.log(nums);
+
+const func = (...rest) => rest
+
+function f(){
+    return Array.from(arguments);
+}
+
+var obj = {
+    func1: function(){
+    return Array.from(arguments);
+    }
+}
+
+console.log(f('이영애','','이수완'));
+console.log(obj.func1('이영애','','이수완'));
+console.log(func('이영애','','이수완'));
+
+console.log(Array.of(7))
+console.log(Array(1,2,3))
+
+function NotArray(a) {
+    console.log("NotArray called with length", a);
+}
+
+console.log(Array.of.call(NotArray, 13));
+
+console.log(Array.of.call([], {name:'하이브리드',name2:'샘이솟아'},34));
+                
+console.log(Array.of.call({})); 
+
+function greet() {
+    console.log(this.animal, "typically sleep between", this.sleepDuration);
+}
+
+const obj00 = {
+    animal: "cats",
+    sleepDuration: "12 and 16 hours",
+};
+
+greet.call(obj00);
+</script>
+
+<!--배열-->
+<script>
+//1. 배열중 임의의 두개 숫자를 더해서 만들 수 있는 모든 경우의 수의 오름차순/반복제거
+function solution01(arr){
+    const ret = [];
+    for(i=0; i<arr.length; i++){
+    for(j=0; j<i; j++){
+        ret.push(arr[i]+arr[j]);
+        // console.log(`첫번쨰 ${i},${j}`)
+    }
+    // console.log(i,j)
+    }
+    return [...new Set(ret)].sort((a, b)=>a-b);
+}
+
+console.log(solution01([1,2,4,5,6,7,8,34,56,23,9]));
+
+
+
+//2. 모의고사 수포자 패턴/정답배열이 주어졌을 떄 어떤 패턴의 접답율이 높은지 학생번호를 반환./정답율이 같을 경우 학생번호 오름차순
+const correct = [1,2,3,4,5,1,2,3,4,5,1,2,3,4,3,3,1,1,2,3,1,2,1,1,5,4,3];
+
+const arr01 = [1,2,3,4,5];
+const arr02 = [2,1,2,3,2,4,2,5];
+const arr03 = [3,3,1,1,2,2,4,4,5,5];
+
+const arrBox = [arr01, arr02, arr03];
+
+function solution02(arrBox, answers){
+    const scores = [0,0,0];
+    // for(let a=0; a<arrBox.length; a++){
+    //   const setLen = Math.floor(answers.length/arrBox[a].length);
+    //   const setRemain = answers.length%arrBox[a].length;
+    //   let num = 0;
+
+    //   for(let i=0; i<setLen-1; i++){
+    //     arrBox[a] = [...arrBox[a], ...arrBox[a]];
+    //   }
+    //   for(let j=0; j<setRemain; j++){
+    //     arrBox[a].push(arrBox[a][j]);
+    //   }
+    //   for(let k=0; k<answers.length; k++){
+    //     if(answers[k]==arrBox[a][k]){
+    //       num++;
+    //     }
+    //   }
+    //   scores[a]=num;
+    // }
+
+    for(const [i, answer] of answers.entries()) {
+    // console.log(answer+' 뭐야야ㅑㅇ');
+    for(const [j, arr] of arrBox.entries()){
+        // console.log(arr);
+        // console.log(i%arr.length);
+        if(answer===arr[i%arr.length]){
+        scores[j]+=1;
+        }
+    }
+    }
+
+    const highScores = [];
+    const maxScore = scores.reduce((a, b) => Math.max(a, b), -Infinity);
+    // const maxScore = Math.max(...scores);// 위 함수랑 똑같지만 데이터가 많을 때 실패할 수 있음
+    for(let b=0; b<scores.length; b++){
+    if(maxScore==scores[b]){
+        highScores.push(b+1);
+    }
+    }
+
+    return highScores;
+}
+
+console.log(solution02(arrBox, correct));
+
+//3. 게임 스테이지 수 N, 유저가 머물러 있는 스테이지번호의 배열 stages 가 주어졌을 때
+//스테이지 번호를 실패율의 내림차순으로 정렬 
+//실패율: 스테이지에 머물러 있는 사람 수/도달한 사람 수
+function solution03(N, stages) {
+    const challenger = new Array(N+1).fill(0);
+    for(const stage of stages){
+    challenger[stage] +=1;
+    }
+
+    const fails = {};
+    let total = stages.length;
+
+    for(let i = 1; i<=N; i++){
+    if(challenger[i]==0){
+        fails[i]=0;
+        continue;
+    }
+    fails[i]=challenger[i]/total;
+    total-=challenger[i];
+    
+    }
+    console.log(fails);
+    console.log(Object.entries(fails));
+    const result = Object.entries(fails).sort((a,b)=>b[1]-a[1]);
+
+    return result.map((v)=>Number(v[0]));
+}
+console.log(solution03(8, [2,2,4,6,4,4,5]))
+
+
+
+//4. 이동 길이 계산.. 캐릭터 이동을 키보드로 컨트롤
+function isValidMove(nx, ny){//이동범위 체크
+    return nx>=-5 && nx<=5 && ny>=-5 && ny<=5;
+}
+
+function updLocation(x, y, dir){//이동한 좌표 셋팅
+    switch(dir){
+    case "U":
+        return [x, y+1];
+    case "D":
+        return [x, y-1];
+    case "R":
+        return [x+1, y];
+    case "L":
+        return [x-1, y];
+    }
+}
+
+function solution04(dirs){
+    let x =0;
+    let y= 0;
+
+    const visited = new Set();
+    // const visited1 = new Set();
+    const visited1 = new Object();
+    // console.log(visited);
+    for(const dir of dirs){
+    const [nx, ny] = updLocation(x, y, dir);
+    if(!isValidMove){continue;}
+    visited.add(`${x} ${y} ${nx} ${ny}`);
+    visited.add(`${nx} ${ny} ${x} ${y}`);
+    visited1.val=x;
+    [x,y]=[nx, ny];
+    }
+    console.log(visited);
+    console.log(visited1);
+    return visited.size/2;
+}
+
+solution04('UUDLLLRRDU');
+
+const mySet = new Set();
+
+mySet.add(1); // Set [ 1 ]
+mySet.add(5); // Set [ 1, 5 ]
+mySet.add(5); // Set [ 1, 5 ]
+mySet.add("some text"); // Set [ 1, 5, 'some text' ]
+const o = { a: 1, b: 2 };
+mySet.add(o);
+console.log([...mySet]);
+
+</script>
+
+<!--스택-->
+<script>
+//1. 괄호 짝 맞추기
+function solution05(p){
+    const stack=[]; // 관건은 후입선출 체계의 가상시스템을 만들어야 함
+    for(const i of p){
+    if(i=='('){
+        stack.push(i);
+    }else if(i==')'){
+        if(stack.length==0){
+        return false;
+        }else{
+        stack.pop();
+        }
+    }
+    }
+    return stack.length==0;
+}
+console.log(solution05('((()()()(())))))'));
+
+
+//2. 10진수->2진수
+function solution06(decimal){
+    const stack= [];
+
+    while (decimal>0){
+    const remainder = decimal%2;
+    stack.push(remainder);
+    decimal = Math.floor(decimal/2);
+    }
+
+    let binary = '';
+    while(stack.length>0){
+    binary+=stack.pop();
+    }
+    
+    // binary = stack.join('');
+
+    return binary;
+}
+console.log(solution06(37));
+
+
+//3.괄호 회전하기
+function solution07(s){
+    const n = s.length;
+    let answer = 0;
+
+    for(let i=0; i<n;i++){
+    const stack = [];
+    let isCorrect = true;
+    for(let j=0;j<n;j++){
+        const c = s[(i+j)%n];
+        if(c=='['||c=='('||c=='{'){
+        stack.push(c); 
+        }else{
+        if(stack.length==0){
+            isCorrect=false;
+            break;
+        }
+        const top = stack[stack.length-1];
+        if(c=='}'&&top=='{'){
+            stack.pop();
+        }else if(c==')'&&top=='('){
+            stack.pop();
+        }else if(c==']'&&top=='['){
+            stack.pop();
+        }else {
+            isCorrect=false;
+            break;                                                                                                                                                                                                                                                                                                                  
+        }
+        }
+    }
+    if(isCorrect&&stack.length==0){
+        answer+=1;
+    }
+    }
+
+    return answer;
+}
+
+console.log(solution07('[](){}'));
+
+//4. 같은 문자 짝지어 없애기
+function solution08(s){
+    s= [...s];
+    for(let i=0; i<s.length;){
+    if(s[i]==s[i+1]){
+        s.splice(i,2);
+        i=0;
+    }else{
+        i++;
+    } 
+    }
+    console.log(s);
+    return s.length==0 ? 1:0;
+
+    // const stack = [];
+    // for(const item of s){
+    //   if(stack.length>0&&stack[stack.length-1]==item){
+    //     stack.pop();
+    //   }else{
+    //     stack.push(item);
+    //   }
+    // }
+    // console.log(stack);
+    // return stack.length==0 ? 1:0;
+}
+
+console.log(solution08('baabadfffeaa'));
+
+
+//5. 주식가격 초 단위 변화
+function solution09(prices){
+    // 시간복잡도 O(N^2)이므로 안됨
+    // const stack =[];
+    // let count = 0;
+    // for(let i=0; i<prices.length; i++){
+    //   for(let j=i+1; j<prices.length; j++){
+    //     if(prices[i]<=prices[j]){
+    //       count+=1;
+    //     }
+    //   }
+    //   stack.push(count);
+    //   count=0;
+    // }
+    // return stack;
+
+    const n = prices.length;
+    const answer = new Array(n).fill(0);
+
+    const stack = [0];
+    for(let i=1; i<n; i++){
+    while (stack.length>0&&prices[i]<prices[stack[stack.length-1]]){
+        const j = stack.pop();
+        console.log('i wanna '+j);
+        answer[j] = i-j;
+    }
+    stack.push(i);
+    }
+    console.log('i wanna '+stack);
+
+    while (stack.length>0){
+    const j = stack.pop();
+    answer[j] = n-1-j;
+    }
+
+    return answer;
+}
+
+console.log('solution09::'+solution09([1,0,2,3,2,4]));
+
+//6.크레인 인형 뽑기 게임
+</script>
+</html>
